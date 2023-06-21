@@ -1,4 +1,4 @@
-import { NewPatient, Gender } from "./types";
+import { NewPatient, Gender, Entry } from "./types";
 
 const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
@@ -47,18 +47,31 @@ const parseOccupation = (occupation: unknown): string => {
     return occupation;
 };
 
+const parseEntries = (entries: unknown): Entry[] => {
+    if (!entries || !(entries instanceof Array)) {
+       throw new Error('Invalid entries');
+    }
+    if (!entries.every((e) => (e.type === 'Hospital' || e.type === 'OccupationalHelthcare' || e.type === 'HealthCheck' ))) {
+        throw new Error('Invalid entries');
+    }
+
+    /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
+    return entries;
+};
+
 const toNewPatient = (object: unknown): NewPatient => {
     if (!object || typeof object !== 'object') {
         throw new Error('Missing data');
     }
 
-    if ('name' in object && 'dateOfBirth' in object && 'gender' in object && 'ssn' in object && 'occupation' in object) {
+    if ('name' in object && 'dateOfBirth' in object && 'gender' in object && 'ssn' in object && 'occupation' in object && 'entries' in object) {
         const newPatient: NewPatient = {
             name: parseName(object.name),
             dateOfBirth: parseDateOfBirth(object.dateOfBirth),
             gender: parseGender(object.gender),
             ssn: parseSsn(object.ssn),
-            occupation: parseOccupation(object.occupation)
+            occupation: parseOccupation(object.occupation),
+            entries: parseEntries(object.entries)
         };
 
         return newPatient;

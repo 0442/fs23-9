@@ -1,0 +1,3 @@
+[submodule "patientor"]
+	path = patientor-frontend
+	url = https://github.com/fullstack-hy2020/patientor
